@@ -49,6 +49,9 @@ services:
  haproxy:
   container_name: haproxy
   hostname: haproxy
+  build:
+    context: ./haproxy
+    dockerfile: Dockerfile
   ports:
     - "5672:5672"
     - "1936:1936"
