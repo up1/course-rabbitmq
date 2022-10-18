@@ -11,8 +11,8 @@ services:
    - cluster-network
   volumes:
    - ./storage/rabbitmq-node-01:/var/lib/rabbitmq
+   - ./my_erlang_cookie.txt:/var/lib/rabbitmq/.erlang.cookie
   environment:
-   - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-setcookie cluster_cookie"
    - RABBITMQ_DEFAULT_USER=admin
    - RABBITMQ_DEFAULT_PASS=Admin@123  
   
@@ -26,8 +26,8 @@ services:
    - cluster-network
   volumes:
    - ./storage/rabbitmq-node-02:/var/lib/rabbitmq
+   - ./my_erlang_cookie.txt:/var/lib/rabbitmq/.erlang.cookie
   environment:
-   - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-setcookie cluster_cookie"
    - RABBITMQ_DEFAULT_USER=admin
    - RABBITMQ_DEFAULT_PASS=Admin@123
       
@@ -41,8 +41,8 @@ services:
    - cluster-network
   volumes:
    - ./storage/rabbitmq-node-03:/var/lib/rabbitmq
+   - ./my_erlang_cookie.txt:/var/lib/rabbitmq/.erlang.cookie
   environment:
-   - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-setcookie cluster_cookie"
    - RABBITMQ_DEFAULT_USER=admin
    - RABBITMQ_DEFAULT_PASS=Admin@123
 
