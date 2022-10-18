@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+ rabbitmq-node-01:
+  image: rabbitmq:3.11.1-management
+  container_name: rabbitmq-node-01
+  hostname: rabbitmq-node-01
+  ports:
+   - "15672:15672"
+  networks: 
+   - cluster-network
+  volumes:
+   - ./storage/rabbitmq-node-01:/var/lib/rabbitmq
+  environment:
+   - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-setcookie cluster_cookie"
+   - RABBITMQ_DEFAULT_USER=admin
+   - RABBITMQ_DEFAULT_PASS=Admin@123  
+  
+ rabbitmq-node-02:
+  image: rabbitmq:3.11.1-management
+  container_name: rabbitmq-node-02
+  hostname: rabbitmq-node-02
+  ports:
+   - "15673:15672"
+  networks: 
+   - cluster-network
+  volumes:
+   - ./storage/rabbitmq-node-02:/var/lib/rabbitmq
+  environment:
+   - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-setcookie cluster_cookie"
+   - RABBITMQ_DEFAULT_USER=admin
+   - RABBITMQ_DEFAULT_PASS=Admin@123
+      
+ rabbitmq-node-03:
+  image: rabbitmq:3.11.1-management
+  container_name: rabbitmq-node-03
+  hostname: rabbitmq-node-03
+  ports:
+   - "15674:15672"
+  networks: 
+   - cluster-network
+  volumes:
+   - ./storage/rabbitmq-node-03:/var/lib/rabbitmq
+  environment:
+   - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-setcookie cluster_cookie"
+   - RABBITMQ_DEFAULT_USER=admin
+   - RABBITMQ_DEFAULT_PASS=Admin@123
+
+ haproxy:
+  container_name: haproxy
+  hostname: haproxy
+  ports:
+    - "5672:5672"
+    - "1936:1936"
+  networks: 
+   - cluster-network
+
+networks:
+ cluster-network:
+  driver: bridge
