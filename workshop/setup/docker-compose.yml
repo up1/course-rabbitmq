@@ -11,10 +11,10 @@ services:
    - cluster-network
   volumes:
    - ./storage/rabbitmq-node-01:/var/lib/rabbitmq
-   - ./my_erlang_cookie.txt:/var/lib/rabbitmq/.erlang.cookie
   environment:
    - RABBITMQ_DEFAULT_USER=admin
    - RABBITMQ_DEFAULT_PASS=Admin@123  
+  command: ["--erlang-cookie mycookie"]
   
  rabbitmq-node-02:
   image: rabbitmq:3.11.1-management
