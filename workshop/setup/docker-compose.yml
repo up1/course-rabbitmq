@@ -18,7 +18,7 @@ services:
   command: ["bash", "-c", "chmod 400 /var/lib/rabbitmq/.erlang.cookie; rabbitmq-server"]
   healthcheck:
     test: ["CMD", "curl", "-f", "http://localhost:15672"]
-    interval: 30s
+    interval: 5s
     timeout: 10s
     retries: 5
   
@@ -36,6 +36,12 @@ services:
   environment:
    - RABBITMQ_DEFAULT_USER=admin
    - RABBITMQ_DEFAULT_PASS=Admin@123
+  command: ["bash", "-c", "chmod 400 /var/lib/rabbitmq/.erlang.cookie; rabbitmq-server"]
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:15672"]
+    interval: 5s
+    timeout: 10s
+    retries: 5
       
  rabbitmq-node-03:
   image: rabbitmq:3.11.1-management
@@ -51,6 +57,12 @@ services:
   environment:
    - RABBITMQ_DEFAULT_USER=admin
    - RABBITMQ_DEFAULT_PASS=Admin@123
+  command: ["bash", "-c", "chmod 400 /var/lib/rabbitmq/.erlang.cookie; rabbitmq-server"]
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:15672"]
+    interval: 5s
+    timeout: 10s
+    retries: 5
 
  haproxy:
   container_name: haproxy
@@ -61,6 +73,14 @@ services:
   ports:
     - "5672:5672"
     - "1936:1936"
+  depends_on:
+    rabbitmq-node-01:
+      condition: service_healthy
+    rabbitmq-node-02:
+      condition: service_healthy
+    rabbitmq-node-03:
+        condition: service_healthy
+    
   networks: 
    - cluster-network
 
