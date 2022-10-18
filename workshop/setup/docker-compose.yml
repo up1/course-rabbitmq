@@ -11,10 +11,11 @@ services:
    - cluster-network
   volumes:
    - ./storage/rabbitmq-node-01:/var/lib/rabbitmq
+   - ./my_erlang_cookie.txt:/var/lib/rabbitmq/.erlang.cookie
   environment:
    - RABBITMQ_DEFAULT_USER=admin
-   - RABBITMQ_DEFAULT_PASS=Admin@123  
-   - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS='-setcookie mydemo'
+   - RABBITMQ_DEFAULT_PASS=Admin@123
+  command: ["bash", "-c", "chmod 400 /var/lib/rabbitmq/.erlang.cookie; rabbitmq-server"]
   healthcheck:
     test: ["CMD", "curl", "-f", "http://localhost:15672"]
     interval: 30s
