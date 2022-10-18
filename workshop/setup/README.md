@@ -81,4 +81,72 @@ Start Server
 $docker-compose build
 $docker-compose up -d
 $docker-compose ps
+
+haproxy            docker-entrypoint.sh hapro ...   Up             0.0.0.0:1936->1936/tcp,:::1936->1936/tcp, 0.0.0.0:5672->5672/tcp,:::5672->5672/tcp
+rabbitmq-node-01   docker-entrypoint.sh bash  ...   Up (healthy)   15671/tcp, 0.0.0.0:15672->15672/tcp,:::15672->15672/tcp, 15691/tcp, 15692/tcp, 25672/tcp, 4369/tcp, 5671/tcp, 5672/tcp
+rabbitmq-node-02   docker-entrypoint.sh bash  ...   Up (healthy)   15671/tcp, 0.0.0.0:15673->15672/tcp,:::15673->15672/tcp, 15691/tcp, 15692/tcp, 25672/tcp, 4369/tcp, 5671/tcp, 5672/tcp
+rabbitmq-node-03   docker-entrypoint.sh bash  ...   Up (healthy)   15671/tcp, 0.0.0.0:15674->15672/tcp,:::15674->15672/tcp, 15691/tcp, 15692/tcp, 25672/tcp, 4369/tcp, 5671/tcp, 5672/tcp
 ```
+
+### Check status of `node-01`
+```
+$docker container exec -it rabbitmq-node-01 bash -c "rabbitmqctl cluster_status"
+
+Cluster status of node rabbit@rabbitmq-node-01 ...
+Basics
+
+Cluster name: rabbit@rabbitmq-node-01
+
+Disk Nodes
+
+rabbit@rabbitmq-node-01
+
+Running Nodes
+
+rabbit@rabbitmq-node-01
+```
+
+### Add `node-02` and `node-03` to the Cluster
+
+Node 02
+```
+$docker container exec -it rabbitmq-node-02 bash -c "rabbitmqctl stop_app"
+$docker container exec -it rabbitmq-node-02 bash -c "rabbitmqctl join_cluster rabbit@rabbitmq-node-01"
+$docker container exec -it rabbitmq-node-02 bash -c "rabbitmqctl start_app"
+```
+
+Node 03
+```
+$docker container exec -it rabbitmq-node-03 bash -c "rabbitmqctl stop_app"
+$docker container exec -it rabbitmq-node-03 bash -c "rabbitmqctl join_cluster rabbit@rabbitmq-node-01"
+$docker container exec -it rabbitmq-node-03 bash -c "rabbitmqctl start_app"
+```
+
+### Check status of `node-01` again !!
+```
+$docker container exec -it rabbitmq-node-01 bash -c "rabbitmqctl cluster_status"
+
+Running Nodes
+
+rabbit@rabbitmq-node-01
+rabbit@rabbitmq-node-02
+rabbit@rabbitmq-node-03
+```
+
+## Config HA mode for queues
+
+Mirror = 2
+```
+$docker container exec -it rabbitmq-node-01 bash -c 'rabbitmqctl set_policy ha-two "^some\." "{\"ha-mode\":\"exactly\",\"ha-params\":2,\"ha-sync-mode\":\"automatic\"}"'
+
+```
+
+Mirror all nodes
+```
+$docker container exec -it rabbitmq-node-01 bash -c 'rabbitmqctl set_policy ha-all "^all\_" "{\"ha-mode\":\"all\"}"'
+```
+
+## Check and Access to HAProxy
+* URL = http://localhost:1936/haproxy?stats
+  * user=haproxy
+  * password=haproxy
