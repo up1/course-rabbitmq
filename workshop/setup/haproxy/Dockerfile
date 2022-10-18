@@ -1,4 +1,4 @@
-FROM haproxy:2.6.6
+FROM haproxy:2.3
 ENV HAPROXY_USER haproxy
 RUN mkdir -p /var/lib/${HAPROXY_USER} \
     && chown -R ${HAPROXY}:${HAPROXY_USER} /var/lib/${HAPROXY_USER}
