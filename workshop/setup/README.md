@@ -133,7 +133,7 @@ rabbit@rabbitmq-node-02
 rabbit@rabbitmq-node-03
 ```
 
-## Config HA mode for queues
+## Config [HA (High Availability) mode](https://www.rabbitmq.com/ha.html) for queues
 
 Mirror = 2
 ```
