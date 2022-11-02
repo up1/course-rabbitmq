@@ -9,6 +9,6 @@
   * Exchange
   * Topic
   * Routing key
-* Working with Spring Boot
+* [Working with Spring Boot](https://github.com/up1/course-rabbitmq/tree/main/workshop/java/demo-rabbit)
 * Admin and monitoring
 * Use cases
