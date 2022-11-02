@@ -5,6 +5,8 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,9 +39,18 @@ public class RabbitConfig {
         return new Queue(Q_HELLO);
     }
 
+    // Working with JSON format
+    // https://docs.spring.io/spring-amqp/docs/current/reference/html/#message-converters
+    @Bean
+    public MessageConverter jsonMessageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
     @Bean
     public RabbitTemplate template() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
+//        Use JSON message
+//        rabbitTemplate.setMessageConverter(jsonMessageConverter());
         rabbitTemplate.setExchange(Q_HELLO);
         return rabbitTemplate;
     }
